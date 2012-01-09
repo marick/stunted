@@ -47,3 +47,12 @@ puts ValueHolder.new(0).
      bumped.
      defsend(make_adder.(33)).
      value     # 34
+
+# You can pass in extra arguments
+
+INCREMENT_VALUE = 200
+
+puts ValueHolder.new(0).
+     defsend(-> addend { self.class.new(@value + addend) }, INCREMENT_VALUE).
+     defsend(INCREMENT_VALUE) { | addend | self.class.new(value + addend) }.
+     value   # 400

@@ -16,19 +16,21 @@ module Stunted
 
   module Chainable
 
-    def pass_to(fn = nil, &block)
-      if fn
-        fn.(self)
+    def pass_to(*args, &block)
+      if block_given? 
+        lambda(&block).(self, *args)
       else
-        lambda(&block).(self)
+        fn = args.shift
+        fn.(self, *args)
       end
     end
 
-    def defsend(fn = nil, &block)
-      if fn
-        instance_exec(&fn)
+    def defsend(*args, &block)
+      if block_given? 
+        instance_exec(*args, &block)
       else
-        instance_exec(&block)
+        fn = args.shift
+        instance_exec(*args, &fn)
       end
     end
   end

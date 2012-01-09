@@ -40,6 +40,15 @@ class TestChaining  < Test::Unit::TestCase
       result = @contains_three.pass_to add_maker.(3)
       assert { result == 6 }
     end
+
+    should "allow extra arguments" do
+      result = @contains_three.pass_to(-> _, addend { _.value + addend }, 33)
+      assert { result == 36}
+
+      result = @contains_three.pass_to(33) { |_, addend | _.value + addend }
+      assert { result == 36}
+    end
+      
   end
 
   context "defsend is like defining a temporary method and then sending to it" do 
@@ -59,6 +68,13 @@ class TestChaining  < Test::Unit::TestCase
       result = @contains_three.defsend(@contains_three.some_function_that_refers_to_self)
       assert { result == 3 }
     end
-  end
 
+    should "allow arguments" do
+      result = @contains_three.defsend(-> addend { @value + addend }, 33)
+      assert { result == 36}
+
+      result = @contains_three.defsend(33) { |addend | value + addend }
+      assert { result == 36}
+    end
+  end
 end

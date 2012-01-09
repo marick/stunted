@@ -44,3 +44,13 @@ puts ValueHolder.new(0).
      bumped.
      pass_to(make_adder.(33)).
      succ     # 35
+
+
+# You can pass in extra arguments
+
+INCREMENT_VALUE = 200
+
+puts ValueHolder.new(0).
+     pass_to(-> _, addend { _.class.new(_.value + addend) }, INCREMENT_VALUE).
+     pass_to(INCREMENT_VALUE) { | _, addend | _.class.new(_.value + addend) }.
+     value   # 400
