@@ -2,7 +2,7 @@ module Stunted
 
   class FunctionalHash < Hash
 
-    def initialize(hash)
+    def initialize(hash = {})
       hash.each do | k, v |
         self[k] = v
         if k.is_a?(Symbol)
@@ -70,6 +70,15 @@ module Stunted
     def only(*keys)
       self.class[*keys.zip(self.values_at(*keys)).flatten(1)]
     end
+
+    def become(*shapes)
+      superklass = Class.new(self.class)
+      shapes.each do | mod | 
+        superklass.send(:include, mod)
+      end
+      superklass.new(self)
+    end
+
     private :[]=, :clear, :delete, :delete_if
   end
 

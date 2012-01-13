@@ -166,5 +166,39 @@ class FunctionalHashTest < Test::Unit::TestCase
         assert { actual == {:a => 1, :c => 3} }
       end
     end
+
+
+    context "becoming a particular shape" do
+      module OddShaped
+        def oddly
+          self.merge(:odd => "once")
+        end
+      end
+
+      module EvenShaped
+        def evenly
+          self.merge(:even => "once")
+        end
+      end
+
+      should "allow module methods to be called" do 
+        hashlike = FunctionalHash.new.become(OddShaped, EvenShaped)
+        assert { hashlike.oddly.odd == "once" }
+      end
+
+      should "cause a copy of the extended object to contain the same functions" do 
+        hashlike = FunctionalHash.new.become(OddShaped, EvenShaped)
+        assert { hashlike.oddly.evenly == {:odd => "once", :even => "once" } }
+      end
+
+      should "accumulate the functions from multiple `become` calls." do
+        hashlike = FunctionalHash.new.become(OddShaped).become(EvenShaped)
+        assert { hashlike.oddly.evenly == {:odd => "once", :even => "once" } }
+      end
+
+    end
+
+
+
   end
 end
