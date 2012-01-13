@@ -3,6 +3,7 @@ GEM
   specs:
     assert2 (0.5.5)
     git (1.2.5)
+    hamster (0.4.2)
     jeweler (1.6.4)
       bundler (~> 1.0)
       git (>= 1.2.5)
@@ -17,6 +18,7 @@ PLATFORMS
 DEPENDENCIES
   assert2
   bundler (~> 1.0.0)
+  hamster
   jeweler (~> 1.6.4)
   rcov
   shoulda
