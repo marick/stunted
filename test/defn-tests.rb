@@ -27,6 +27,15 @@ class DefnTest < Test::Unit::TestCase
     assert { add_from_proc_alternate_syntax.(4, 5) == 9 }
     assert { add_with_captured_var.(2) == 5 }
   end
+
+
+  captured = 3
+  FunctionProvider.defn :add_some, -> a { a + captured }
+
+  should "allow definitions to contain captured variables" do
+    assert { add_some.(2) == 5 }
+  end
+
 end
 
 
