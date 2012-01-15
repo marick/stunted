@@ -79,12 +79,25 @@ module Stunted
       superklass.new(self)
     end
 
+    def component(hash)   # For now, just one pair
+      field = hash.keys.first
+      shape = hash.values.first
+      secondary_module = Module.new
+      shape.instance_methods.each do | meth |
+        defn = "def #{meth}(*args)
+                  merge(#{field.inspect} => self.#{field}.#{meth}(*args))
+                end"
+        secondary_module.module_eval(defn)
+      end
+      merge(field => self[field].become(shape)).become(secondary_module)
+    end
+
     private :[]=, :clear, :delete, :delete_if
   end
 
 
   module FHUtil
-    def F(hash)
+    def F(hash = {})
       FunctionalHash.new(hash)
     end
 

@@ -167,38 +167,75 @@ class FunctionalHashTest < Test::Unit::TestCase
       end
     end
 
+    context "shapes" do
+      context "becoming a particular shape" do
 
-    context "becoming a particular shape" do
-      module OddShaped
-        def oddly
-          self.merge(:odd => "once")
+        module OddShaped
+          def oddly
+            self.merge(:odd => "once")
+          end
+        end
+
+        module EvenShaped
+          def evenly
+            self.merge(:even => "once")
+          end
+        end
+
+        should "allow module methods to be called" do 
+          hashlike = FunctionalHash.new.become(OddShaped, EvenShaped)o
+          assert { hashlike.oddly.odd == "once" }
+        end
+
+        should "cause a copy of the extended object to contain the same functions" do 
+          hashlike = FunctionalHash.new.become(OddShaped, EvenShaped)
+          assert { hashlike.oddly.evenly == {:odd => "once", :even => "once" } }
+        end
+
+        should "accumulate the functions from multiple `become` calls." do
+          hashlike = FunctionalHash.new.become(OddShaped).become(EvenShaped)
+          assert { hashlike.oddly.evenly == {:odd => "once", :even => "once" } }
         end
       end
-
-      module EvenShaped
-        def evenly
-          self.merge(:even => "once")
-        end
-      end
-
-      should "allow module methods to be called" do 
-        hashlike = FunctionalHash.new.become(OddShaped, EvenShaped)
-        assert { hashlike.oddly.odd == "once" }
-      end
-
-      should "cause a copy of the extended object to contain the same functions" do 
-        hashlike = FunctionalHash.new.become(OddShaped, EvenShaped)
-        assert { hashlike.oddly.evenly == {:odd => "once", :even => "once" } }
-      end
-
-      should "accumulate the functions from multiple `become` calls." do
-        hashlike = FunctionalHash.new.become(OddShaped).become(EvenShaped)
-        assert { hashlike.oddly.evenly == {:odd => "once", :even => "once" } }
-      end
-
     end
 
+    context "containing a particular shape" do
 
+      module Timesliced
+        def shift_timeslice(days)
+          merge(:first_date => first_date + days,
+                :last_date => last_date + days)
+        end
+      end
 
+      class ::Fixnum
+        def days
+          self
+        end
+
+        def week
+          self * 7
+        end
+      end
+
+      should "allow spaces of subcomponents to be described" do
+        original =
+          F(name: "fred", 
+            timeslice: F(first_date: Date.new(2001, 1, 1),
+                         last_date: Date.new(2001, 2, 2))).
+          component(:timeslice => Timesliced)
+
+        shifted =
+          original.
+          shift_timeslice(1.week).
+          shift_timeslice(2.days)
+
+        assert { shifted.timeslice.first_date == original.timeslice.first_date + 9 }
+        assert { shifted.timeslice.last_date == original.timeslice.last_date + 9 }
+      end
+    end
+    
   end
 end
+
+
