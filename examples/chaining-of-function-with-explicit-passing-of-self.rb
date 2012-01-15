@@ -1,4 +1,5 @@
-require '../lib/stunted'
+$:.unshift("../lib")
+require "stunted"
 
 # A boring class that holds a value and can produce
 # new objects with an incremented value

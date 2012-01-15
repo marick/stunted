@@ -1,4 +1,5 @@
-require '../lib/stunted'
+$:.unshift("../lib")
+require "stunted"
 
 # `defn` can be used to declare functions within modules. They are
 # available with `include` or `extend`.
