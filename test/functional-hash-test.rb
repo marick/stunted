@@ -183,7 +183,7 @@ class FunctionalHashTest < Test::Unit::TestCase
         end
 
         should "allow module methods to be called" do 
-          hashlike = FunctionalHash.new.become(OddShaped, EvenShaped)o
+          hashlike = FunctionalHash.new.become(OddShaped, EvenShaped)
           assert { hashlike.oddly.odd == "once" }
         end
 
@@ -234,7 +234,33 @@ class FunctionalHashTest < Test::Unit::TestCase
         assert { shifted.timeslice.last_date == original.timeslice.last_date + 9 }
       end
     end
-    
+
+    context "maker functions" do
+      module Round
+        def round; "round!"; end
+      end
+
+      module Cylindrical
+        def cylindrical; "cylinder"; end
+      end
+
+      reservation_maker = FunctionalHash.make_maker(Round, Cylindrical)
+      reservation = reservation_maker.(a: 1, b: 2)
+
+      should "make regular immutable hash" do
+        assert { reservation.a == 1 }
+      end
+
+      should "include shape functions" do 
+        assert { reservation.round == "round!" }
+        assert { reservation.cylindrical == "cylinder" }
+      end
+
+      should "include shape functions in hashes created from this hash" do 
+        assert { reservation.merge(c: 3).round == "round!" }
+      end
+        
+    end
   end
 end
 

@@ -71,12 +71,21 @@ module Stunted
       self.class[*keys.zip(self.values_at(*keys)).flatten(1)]
     end
 
-    def become(*shapes)
-      superklass = Class.new(self.class)
+    def self.shaped_class(*shapes)
+      klass = Class.new(self)
       shapes.each do | mod | 
-        superklass.send(:include, mod)
+        klass.send(:include, mod)
       end
-      superklass.new(self)
+      klass
+    end
+
+    def self.make_maker(*shapes)
+      klass = shaped_class(*shapes)
+      ->(inits={}) { klass.new(inits) }
+    end
+
+    def become(*shapes)
+      self.class.shaped_class(*shapes).new(self)
     end
 
     def component(hash)   # For now, just one pair
