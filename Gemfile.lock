@@ -1,3 +1,9 @@
+PATH
+  remote: .
+  specs:
+    stunted (0.0.1)
+      hamster
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -18,7 +24,7 @@ PLATFORMS
 DEPENDENCIES
   assert2
   bundler (~> 1.0.0)
-  hamster
   jeweler (~> 1.6.4)
   rcov
   shoulda
+  stunted!
