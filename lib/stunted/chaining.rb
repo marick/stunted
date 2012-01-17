@@ -2,11 +2,13 @@ module Stunted
 
   module Defn
 
+    # Note: if you use a block with defn, you get block semantics. In particular,
+    # don't try to return from such a block.
     def defn(name, fn = nil, &block)
       if fn
         define_method(name) { fn }
       else
-        define_method(name) { lambda(&block) }  # to get return operator right.
+        define_method(name) { lambda(&block) }  # Todo: why is this lambda rigamarole required?
       end
       module_function name if respond_to?(:module_function, true) 
     end
