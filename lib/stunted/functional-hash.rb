@@ -101,6 +101,16 @@ module Stunted
       merge(field => self[field].become(shape)).become(secondary_module)
     end
 
+    def self.with_replacement_methods(hash)
+      old_pairs = hash.collect do | key, value |
+        old_method = instance_method(key)
+        define_method(key, value)
+        [key, old_method]
+      end
+      yield
+      old_pairs.each { | pair | define_method(*pair) }
+    end
+
     private :[]=, :clear, :delete, :delete_if
   end
 
