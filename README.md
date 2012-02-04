@@ -9,3 +9,9 @@ written by other people.
 
 Documentation is in the [wiki](https://github.com/marick/stunted/wiki).
 There is a mailing list for [functional programming in Ruby](http://groups.google.com/group/rubyfoopers).
+
+Contributors:
+
+* Brian Marick
+* Edward Monical-Vuylsteke
+* Lar Van Der Jagt
