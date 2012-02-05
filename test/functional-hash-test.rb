@@ -24,7 +24,9 @@ class FunctionalHashTest < Test::Unit::TestCase
     end
   end
 
+
   context "lazy behavior" do
+    puts "==== What is the behavior with procs good for?"
     should "take procs as arguments and evaluate them on demand" do
       @sut = FunctionalHash.new(:a => lambda { @global })
       @global = 33
@@ -84,6 +86,16 @@ class FunctionalHashTest < Test::Unit::TestCase
       assert { empty == {} }
       assert { empty != sut }
       assert { empty.object_id != sut.object_id }
+    end
+
+    should "allow transformations of particular key values" do
+      sut = FunctionalHash.new(value: 5)
+      new_sut = sut.transform(:value) { | value | value * 3 }
+      assert { new_sut.value == 15 }
+
+      sut = FunctionalHash.new("string-key" => 1)
+      new_sut = sut.transform("string-key") { | value | value * 3 }
+      assert { new_sut["string-key"] == 3 }
     end
 
     context "changing within" do
@@ -261,6 +273,7 @@ class FunctionalHashTest < Test::Unit::TestCase
       end
         
     end
+
 
     context "mocking out functions" do
       class Foo < FunctionalHash

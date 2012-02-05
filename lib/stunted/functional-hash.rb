@@ -32,6 +32,10 @@ module Stunted
     end
     alias_method :+, :merge
 
+    def transform(symbol)
+      merge(symbol => yield(self[symbol]))
+    end
+
     def change_within(*args)
       if (args.first.is_a? Hash)
         merge(args.first)
