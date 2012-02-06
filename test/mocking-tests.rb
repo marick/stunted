@@ -27,23 +27,59 @@ class FunctionalHashTest < Test::Unit::TestCase
 
     should "keep the modified instance methods for all versions of the object" do 
       ClassWithMethods.with_replacement_methods(my_method: -> a { merge(value: self.value * a) }) do 
-        first_foo = ClassWithMethods.new(value: 1)
-        second_foo = first_foo.my_method(5)
-        third_foo = second_foo.my_method(10)
+        first = ClassWithMethods.new(value: 1)
+        second = first.my_method(5)
+        third = second.my_method(10)
 
-        assert { second_foo.value == 5 }
-        assert { third_foo.value == 50 }
+        assert { second.value == 5 }
+        assert { third.value == 50 }
       end
     end
 
     should "The overriding of the method ends at the end of the block" do
-      initial_foo = Object.new
+      initial = "declared local"
       ClassWithMethods.with_replacement_methods(my_method: -> a { merge(value: self.value * a)}) do
-        initial_foo = ClassWithMethods.new
+        initial = ClassWithMethods.new
       end
-      assert { initial_foo.my_method == "value of unmocked method"  }
+      assert { initial.my_method == "value of unmocked method"  }
     end
 
+  end
+
+  module ModuleWithMethods
+    def my_method; "value of unmocked method"; end
+  end
+
+  context "mocking out methods on a module" do
+    class ClassWithIncludedMethods < FunctionalHash
+      include ModuleWithMethods
+    end
+
+    should "be able to temporarily replace a module's instance methods" do 
+      ModuleWithMethods.with_replacement_methods(my_method: -> { "replaced value" }) do
+        assert { ClassWithIncludedMethods.new.my_method == "replaced value" }
+      end
+      assert { ClassWithIncludedMethods.new.my_method == "value of unmocked method"  }
+    end
+  end
+
+  context 'mocking out methods for a "made" class' do
+    maker = FunctionalHash.make_maker(ModuleWithMethods)
+
+    should "be able to temporarily replace a made class's instance methods" do 
+      maker.().class.with_replacement_methods(my_method: -> { "replaced value" }) do
+        assert { maker.().my_method == "replaced value" }
+      end
+      assert { maker.().my_method == "value of unmocked method"  }
+    end
+
+    should "The overriding of the method ends at the end of the block" do
+      initial = "declared local"
+      ClassWithMethods.with_replacement_methods(my_method: -> a { merge(value: self.value * a)}) do
+        initial = ClassWithMethods.new
+      end
+      assert { initial.my_method == "value of unmocked method"  }
+    end
   end
 
   context "mocking particular objects" do 
