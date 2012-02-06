@@ -8,6 +8,7 @@ module Stunted
       if fn
         define_method(name) { fn }
       else
+        puts "Lambda rigamarole could be just { block }"
         define_method(name) { lambda(&block) }  # Todo: why is this lambda rigamarole required?
       end
       module_function name if respond_to?(:module_function, true) 
