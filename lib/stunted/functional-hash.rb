@@ -116,6 +116,10 @@ module Stunted
       old_pairs.each { | pair | define_method(*pair) }
     end
 
+    def with_replacement_methods(hash, &block)
+      self.class.with_replacement_methods(hash, &block)
+    end
+
     private :[]=, :clear, :delete, :delete_if
   end
 

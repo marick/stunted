@@ -327,6 +327,14 @@ class FunctionalHashTest < Test::Unit::TestCase
         end
         assert { initial_foo.my_method == "value of unmocked method"  }
       end
+
+      should "be able to apply the mock function to an object, not just a module." do
+        foo = Foo.new
+        foo.with_replacement_methods(my_method: -> { "replaced value" }) do
+          assert { foo.my_method == "replaced value" }
+        end
+        assert { foo.my_method == "value of unmocked method"  }
+      end
     end
   end
 end
