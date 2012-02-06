@@ -108,10 +108,11 @@ module Stunted
     def self.with_replacement_methods(hash)
       old_pairs = hash.collect do | key, value |
         old_method = instance_method(key)
-        define_method(key, value)
+        define_method(key, value)      
         [key, old_method]
       end
       yield
+    ensure
       old_pairs.each { | pair | define_method(*pair) }
     end
 
@@ -132,6 +133,4 @@ module Stunted
       tuples.map { | row | F(row) }
     end
   end
-
-
 end

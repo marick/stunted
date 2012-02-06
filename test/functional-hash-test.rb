@@ -289,6 +289,22 @@ class FunctionalHashTest < Test::Unit::TestCase
         assert { Foo.new.my_method == "value of unmocked method"  }
       end
 
+      should "undo the replacement no matter what" do
+        assert_raises(Exception) do
+          Foo.with_replacement_methods(my_method: -> { "replaced value" }) do
+            raise Exception.new("boom")
+          end
+        end
+        assert { Foo.new.my_method == "value of unmocked method"  }
+      end
+
+      should_eventually "be able to temporarily replace a module's `defn`ed lambdas" do 
+        Foo.with_replacement_methods(my_lambda: -> { "replaced value" }) do
+          assert { Foo.new.my_lambda.() == "replaced value" }
+        end
+        assert { Foo.new.my_lambda.() == "value of unmocked lambda"  }
+      end
+
       should "keep the modified instance methods for all versions of the object" do 
         Foo.with_replacement_methods(my_method: -> a { merge(value: self.value * a) }) do 
           first_foo = Foo.new(value: 1)
