@@ -277,9 +277,13 @@ class FunctionalHashTest < Test::Unit::TestCase
 
     context "mocking out functions" do
       class Foo < FunctionalHash
+        extend Stunted::Defn
+
         def my_method
           "value of unmocked method"
         end
+
+        defn :my_lambda, -> { "value of unmocked lambda" }
       end
 
       should "be able to temporarily replace a module's instance methods" do 
