@@ -84,12 +84,21 @@ class FunctionalHashTest < Test::Unit::TestCase
 
   context "mocking particular objects" do 
     should "be able to apply the mock function to an object, not just a module." do
-      foo = ClassWithMethods.new
-      foo.with_replacement_methods(my_method: -> { "replaced value" }) do
-        assert { foo.my_method == "replaced value" }
+      object = ClassWithMethods.new
+      object.with_replacement_methods(my_method: -> { "replaced value" }) do
+        assert { object.my_method == "replaced value" }
       end
-      assert { foo.my_method == "value of unmocked method"  }
+      assert { object.my_method == "value of unmocked method"  }
     end
+
+    should_eventually "changing one object's methods doesn't affect another's" do
+      mocked = ClassWithMethods.new
+      unmocked = ClassWithMethods.new
+      mocked.with_replacement_methods(my_method: -> { "replaced value" }) do
+        assert { unmocked.my_method == "value of unmocked method" }
+      end
+    end
+
   end
 
   context "mocking out lambdas attached to a class" do 
