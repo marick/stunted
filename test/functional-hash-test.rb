@@ -98,7 +98,7 @@ class FunctionalHashTest < Test::Unit::TestCase
       assert { new_sut["string-key"] == 3 }
     end
 
-    context "changing within" do
+    context "removing within" do
       setup do 
         @hashlike = F(:val => 3,
                       :other => "other",
@@ -116,7 +116,7 @@ class FunctionalHashTest < Test::Unit::TestCase
       end
 
       should "allow nesting" do
-        actual = @hashlike.change_within(:nested, val => 44)
+        actual = @hashlike.change_within(:nested, :val => 44)
         assert { actual.is_a?(FunctionalHash) }
         assert { actual.val == 3 }
         assert { actual.nested.val == 44 }
@@ -124,7 +124,7 @@ class FunctionalHashTest < Test::Unit::TestCase
       end
 
       should "allow n levels of nesting" do
-        actual = @hashlike.change_within(:nested, :nested, val => 444)
+        actual = @hashlike.change_within(:nested, :nested, :val => 444)
         assert { actual.is_a?(FunctionalHash) }
         assert { actual.val == 3 }
         assert { actual.nested.val == 33 }
