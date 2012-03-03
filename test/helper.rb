@@ -9,11 +9,12 @@ rescue Bundler::BundlerError => e
 end
 require 'test/unit'
 require 'shoulda'
-require 'assert2'
+require 'wrong'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'stunted'
 
 class Test::Unit::TestCase
+  include Wrong
 end
