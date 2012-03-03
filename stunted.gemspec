@@ -20,11 +20,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_runtime_dependency "hamster"
-
   s.add_development_dependency "shoulda", ">= 0"
-  s.add_development_dependency "assert2"
+  s.add_development_dependency "assert2", ">= 0"
   s.add_development_dependency "bundler", "~> 1.0.0"
   s.add_development_dependency "jeweler", "~> 1.6.4"
-  s.add_development_dependency "rcov", ">= 0"
 end

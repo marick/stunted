@@ -6,3 +6,5 @@ doc
 Gemfile.lock
 rdoc
 pkg/*
+.idea
+TAGS
