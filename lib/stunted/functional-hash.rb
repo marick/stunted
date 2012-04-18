@@ -119,7 +119,7 @@ module Stunted
     end
 
     def Fall(tuples)
-      tuples.map { | row | F(row) }
+      HashArray.new(tuples.map { | row | F(row) })
     end
   end
 end
