@@ -10,7 +10,9 @@ module Stunted
     end
 
     def segregate_by_key(key)
-      group_by(&key).values
+      group_by(&key).values.collect do | inner | 
+        self.class.new(inner)
+      end
     end
   end
 end

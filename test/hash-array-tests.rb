@@ -41,15 +41,24 @@ class HashArrayTest < Test::Unit::TestCase
     end
   end
 
-  should "allow segregation by keys" do 
-    input = Fall([ {:id => 1, :name => "fred"},
-                   {:id => 2, :name => "betsy"},
-                   {:id => 1, :name => "dawn"} ])
+  context "segregation by keys" do 
+    setup do 
+      @input = Fall([ {:id => 1, :name => "fred"},
+                      {:id => 2, :name => "betsy"},
+                      {:id => 1, :name => "dawn"} ])
 
-    actual = input.segregate_by_key(:id)
-    expected = [ [ {:id => 1, :name => "fred"},
-                   {:id => 1, :name => "dawn"} ],
-                 [ {:id => 2, :name => "betsy"} ] ]
-    assert { actual == expected }
+      @actual = @input.segregate_by_key(:id)
+      @expected = [ [ {:id => 1, :name => "fred"},
+                      {:id => 1, :name => "dawn"} ],
+                    [ {:id => 2, :name => "betsy"} ] ]
+    end
+
+    should "produce an array of arrays" do 
+      assert { @actual == @expected }
+    end
+
+    should "make the inner arrays HashArrays" do 
+      assert { @actual.first.is_a?(Stunted::HashArray) } 
+    end
   end
 end
