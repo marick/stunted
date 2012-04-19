@@ -11,6 +11,7 @@ module Stunted
 
   module Shapeable
     def become(*shapes)
+      return self if shapes.empty?
       self.class.shaped_class(*shapes).new(self)
     end
   end

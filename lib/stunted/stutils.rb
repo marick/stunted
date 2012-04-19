@@ -1,15 +1,24 @@
 module Stunted
   module Stutils
-    def F(hash = {})
-      FunctionalHash.new(hash)
+    def F(hash = {}, *shapes)
+      FunctionalHash.new(hash).become(*shapes)
     end
 
-    def Fonly(tuples)
-      F(tuples.first)
+    def Fonly(tuples, *shapes)
+      F(tuples.first, *shapes)
     end
 
-    def Fall(tuples)
-      HashArray.new(tuples.map { | row | F(row) })
+    def Fall(tuples, *args)
+      first = args.first
+      if first.is_a?(Hash)
+        array_shapes = first[:array] || []
+        hash_shapes = first[:hash] || []
+      else
+        hash_shapes = args
+        array_shapes = []
+      end
+      HashArray.new(tuples.map { | row | F(row, *hash_shapes) }).
+                become(*array_shapes)
     end
   end
 
