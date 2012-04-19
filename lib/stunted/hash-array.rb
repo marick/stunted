@@ -1,5 +1,7 @@
 module Stunted
   class HashArray < Array
+    include Shapeable
+    extend ShapeableClassMethods
 
     def collapse_and_aggregate(*keys)
       keys.reduce(first) do | accumulator, key |

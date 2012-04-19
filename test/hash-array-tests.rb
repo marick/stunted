@@ -61,4 +61,14 @@ class HashArrayTest < Test::Unit::TestCase
       assert { @actual.first.is_a?(Stunted::HashArray) } 
     end
   end
+
+  context "shapeability" do 
+    module ArrayShaped
+      def neg_count; -count; end
+    end
+
+    should "also apply to hash arrays" do 
+      assert { Fall([ {:a => 1}]).become(ArrayShaped).neg_count == -1 }
+    end
+  end
 end

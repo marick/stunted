@@ -1,6 +1,8 @@
 module Stunted
 
   class FunctionalHash < Hash
+    include Shapeable
+    extend ShapeableClassMethods
 
     def initialize(hash = {})
       hash.each do | k, v |
@@ -75,21 +77,9 @@ module Stunted
       self.class[*keys.zip(self.values_at(*keys)).flatten(1)]
     end
 
-    def self.shaped_class(*shapes)
-      klass = Class.new(self)
-      shapes.each do | mod | 
-        klass.send(:include, mod)
-      end
-      klass
-    end
-
     def self.make_maker(*shapes)
       klass = shaped_class(*shapes)
       ->(inits={}) { klass.new(inits) }
-    end
-
-    def become(*shapes)
-      self.class.shaped_class(*shapes).new(self)
     end
 
     def component(hash)   # For now, just one pair
@@ -108,18 +98,4 @@ module Stunted
     private :[]=, :clear, :delete, :delete_if
   end
 
-
-  module FHUtil
-    def F(hash = {})
-      FunctionalHash.new(hash)
-    end
-
-    def Fonly(tuples)
-      F(tuples.first)
-    end
-
-    def Fall(tuples)
-      HashArray.new(tuples.map { | row | F(row) })
-    end
-  end
 end
