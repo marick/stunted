@@ -1,5 +1,5 @@
 module Stunted
-  module FUtil
+  module Stutils
     def F(hash = {})
       FunctionalHash.new(hash)
     end
@@ -13,7 +13,6 @@ module Stunted
     end
   end
 
-  FUtils = FUtil unless defined?(FUtils)
-  FUtile = FUtil unless defined?(FUtile) # Ha ha!
-  FHUtil = FUtil unless defined?(FHUtil) # Backward compatibility
+  Stutil = Stutils unless defined?(Stutil) # Backward compatibility
+  FHUtil = Stutils unless defined?(FHUtil) # Backward compatibility
 end

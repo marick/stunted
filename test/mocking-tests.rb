@@ -2,7 +2,7 @@ require 'helper'
 
 class FunctionalHashTest < Test::Unit::TestCase
   include Stunted
-  include Stunted::FHUtil
+  include Stunted::Stutils
 
   context "mocking out methods via a class" do
     class ClassWithMethods < FunctionalHash

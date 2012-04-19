@@ -2,7 +2,7 @@ require 'helper'
 
 class HashArrayTest < Test::Unit::TestCase
   include Stunted
-  include Stunted::FHUtil
+  include Stunted::Stutils
   
   context "collapsing a hash-array into one hash" do
     should "aggregate named key values into an array" do
